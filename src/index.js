@@ -1,4 +1,5 @@
-// import '../pages/index.css';
+import './pages/index.css';
+import { initialCards } from './scripts/cards.js';
 
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content;
@@ -11,10 +12,23 @@ const profileAddButton = document.querySelector('.profile__add-button'); //кн�
 const popupCloseButton = document.querySelectorAll('.popup__close'); //кнопка закрыть
 
 const popupEdit = document.querySelector('.popup_type_edit'); //редактировать
+const popupInputName = popupEdit.querySelector('.popup__input_type_name'); //name
+const popupInputJob = popupEdit.querySelector('.popup__input_type_description'); //job
+
 const popupNewCard = document.querySelector('.popup_type_new-card'); //добавить
+const popupFormNewCard = document.forms['new-place'];
+const popupInputCardName = popupFormNewCard.querySelector('.popup__input_type_card-name');
+const popupInputCardUrl = popupFormNewCard.querySelector('.popup__input_type_url');
+
 const popupImage = document.querySelector('.popup_type_image'); //image
 
+const profileTitle = document.querySelector('.profile__title');
+const profileDescription = document.querySelector('.profile__description');
+
+
 function openEditPopup () {
+  popupInputName.value = profileTitle.textContent;
+  popupInputJob.value = profileDescription.textContent;
   openPopup(popupEdit);
 }
 
@@ -70,8 +84,13 @@ function addCard(arrElement) {
   cardPlacesList.append(arrElement);
 }
 
+function addNewCard (cardData, deleteHandler, likeHandler) {
+  const card = createCard(cardData, deleteHandler, likeHandler);
+  cardPlacesList.prepend(card);
+}
+
 // @todo: Функция создания карточки
-function createCard(cardData, deleteHandler, likeHandler, imageHandler) {
+function createCard(cardData, deleteHandler, likeHandler) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
   cardElement.querySelector('.card__title').textContent = cardData.name;
   cardElement.querySelector('.card__image').src = cardData.link;
@@ -99,7 +118,7 @@ function deleteCard(event) {
 // @todo: Вывести карточки на страницу
 function renderCards() {
   initialCards.forEach(cardData => {
-    const arrElement = createCard(cardData, deleteCard, changeLike, );
+    const arrElement = createCard(cardData, deleteCard, changeLike);
     addCard(arrElement);
   });
 }
@@ -108,7 +127,30 @@ function renderCards() {
 function changeLike (evt) {
   evt.target.classList.toggle('card__like-button_is-active');
 }
+
+function handleFormSubmitEdit (evt) {
+  evt.preventDefault();
+  profileTitle.textContent = popupInputName.value;
+  profileDescription.textContent = popupInputJob.value;
+  closePopup(popupEdit);
+}
+
+popupEdit.addEventListener('submit', handleFormSubmitEdit);
+
 // ---------------------------------------//
 
 renderCards();
 
+function handleFormSubmitNewCard (evt) {
+  evt.preventDefault();
+  const cardObjNew = {
+    name: popupInputCardName.value,
+    link: popupInputCardUrl.value
+  }
+  addNewCard(cardObjNew, deleteCard, changeLike);
+  closePopup(popupNewCard);
+
+  popupFormNewCard.reset();
+}
+
+popupFormNewCard.addEventListener('submit', handleFormSubmitNewCard);
