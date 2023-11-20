@@ -1,20 +1,19 @@
-import { cardTemplate, openImagePopup } from '../index.js';
+import { cardTemplate } from '../index.js';
 
 // Функция создания карточки
-export function createCard (cardData, deleteHandler, likeHandler) {
+export function createCard (cardData, deleteHandler, likeHandler, imageHandler) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
   cardElement.querySelector('.card__title').textContent = cardData.name;
   cardElement.querySelector('.card__image').src = cardData.link;
   cardElement.querySelector('.card__image').alt = cardData.name;
   const cardDeletButton = cardElement.querySelector('.card__delete-button');
   const cardLikeButton = cardElement.querySelector('.card__like-button');
-  cardElement
-    .querySelector('.card__image')
-    .addEventListener('click', function () {
-      openImagePopup(cardData.link, cardData.name);
-    });
+  const cardImageClick = cardElement.querySelector('.card__image');
   cardDeletButton.addEventListener('click', deleteHandler);
   cardLikeButton.addEventListener('click', likeHandler);
+  cardImageClick.addEventListener('click', function () {
+    imageHandler(cardData);
+  });
   return cardElement;
 }
 
