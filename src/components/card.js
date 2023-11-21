@@ -1,4 +1,4 @@
-import { cardTemplate } from '../index.js';
+import { cardTemplate } from '../pages/index.js';
 
 // Функция создания карточки
 export function createCard (cardData, deleteHandler, likeHandler, imageHandler) {

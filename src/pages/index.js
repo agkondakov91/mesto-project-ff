@@ -1,7 +1,7 @@
-import './pages/index.css';
-import { initialCards } from './components/cards.js';
-import { createCard, changeLike, deleteCard } from './components/card.js';
-import { openPopup, closePopup, closePopupClickOverlay } from './components/modal.js';
+import '../pages/index.css';
+import { initialCards } from '../components/cards.js';
+import { createCard, changeLike, deleteCard } from '../components/card.js';
+import { openPopup, closePopup, closePopupClickOverlay } from '../components/modal.js';
 
 export const cardTemplate = document.querySelector('#card-template').content;
 const cardPlacesList = document.querySelector('.places__list');
@@ -20,8 +20,8 @@ const popupInputCardName = popupFormNewCard.querySelector('.popup__input_type_ca
 const popupInputCardUrl = popupFormNewCard.querySelector('.popup__input_type_url');
 
 const popupImage = document.querySelector('.popup_type_image');
-const image = popupImage.querySelector('.popup__image');
-const caption = popupImage.querySelector('.popup__caption');
+const photoPopupImage = popupImage.querySelector('.popup__image');
+const captionPopupImage = popupImage.querySelector('.popup__caption');
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 
@@ -52,9 +52,9 @@ function openNewCardPopup () {
 }
 
 function openImagePopup (cardData) {
-  image.src = cardData.link;
-  image.alt = cardData.name;
-  caption.textContent = cardData.name;
+  photoPopupImage.src = cardData.link;
+  photoPopupImage.alt = cardData.name;
+  captionPopupImage.textContent = cardData.name;
   openPopup(popupImage);
 }
 
