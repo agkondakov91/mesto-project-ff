@@ -2,6 +2,18 @@ import '../pages/index.css';
 import { initialCards } from '../components/cards.js';
 import { createCard, changeLike, deleteCard } from '../components/card.js';
 import { openPopup, closePopup, closePopupClickOverlay } from '../components/modal.js';
+import { enableValidation, clearValidation } from '../components/validation.js';
+
+const config = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__error_visible'
+}
+
+enableValidation(config);
 
 export const cardTemplate = document.querySelector('#card-template').content;
 const cardPlacesList = document.querySelector('.places__list');
@@ -25,6 +37,8 @@ const captionPopupImage = popupImage.querySelector('.popup__caption');
 const profileTitle = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 
+
+
 function addCard (arrElement) {
   cardPlacesList.append(arrElement);
 }
@@ -42,12 +56,14 @@ function renderCards() {
 }
 
 function openEditPopup () {
+  clearValidation(popupFormEdit, config);
   popupInputName.value = profileTitle.textContent;
   popupInputJob.value = profileDescription.textContent;
   openPopup(popupEdit);
 }
 
 function openNewCardPopup () {
+  clearValidation(popupFormNewCard, config);
   openPopup(popupNewCard);
 }
 
@@ -63,6 +79,7 @@ function handleFormSubmitEdit (evt) {
   profileTitle.textContent = popupInputName.value;
   profileDescription.textContent = popupInputJob.value;
   closePopup(popupEdit);
+  clearValidation(popupFormEdit, config);
 }
 
 function handleFormSubmitNewCard (evt) {
@@ -73,8 +90,9 @@ function handleFormSubmitNewCard (evt) {
   }
   addNewCard(cardDataNew, deleteCard, changeLike, openImagePopup);
   closePopup(popupNewCard);
-
   popupFormNewCard.reset();
+
+  clearValidation(popupFormNewCard, config);
 }
 
 popupCloseButtonsList.forEach(button => {

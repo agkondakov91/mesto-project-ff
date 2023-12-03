@@ -1,0 +1,14 @@
+.popup__error {
+  position: relative;
+  max-width: 358px;
+  height: 30px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: normal;
+  white-space: normal;
+  color: rgba(255, 0, 0, 1);
+}
+
+.popup__error:last-of-type {
+  margin-bottom: 15px;
+}

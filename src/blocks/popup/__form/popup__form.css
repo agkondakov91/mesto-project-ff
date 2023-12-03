@@ -1,3 +1,5 @@
 .popup__form {
   margin-top: 27px;
+  display: flex;
+  flex-direction: column;
 }
