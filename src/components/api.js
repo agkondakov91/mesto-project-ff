@@ -1,6 +1,6 @@
 // общие данные
 const api = {
-  baseUrl: 'https://mesto.nomoreparties.co/v1/wff-cohort-2',
+  baseUrl: 'https://nomoreparties.co/v1/wff-cohort-2',
   headers: {
     authorization: '898ac20f-ea41-42e4-b8ee-de36d37568f3',
     'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ function checkResponse(res) {
 export function getUserInfo() {
   return fetch(`${api.baseUrl}/users/me`, {
     method: 'GET',
-    headers: api.headers,
+    headers: api.headers
   })
   .then(res => checkResponse(res))
 }
@@ -34,19 +34,19 @@ export function getInitialCards() {
 }
  
 //3. Редактирование профиля
-export function saveUserData() {
+export function saveUserData(newName, newJob) {
   return fetch(`${api.baseUrl}/users/me`, {
     method: 'PATCH',
     headers: api.headers,
     body: JSON.stringify({
-      name: `${popupInputName.value}`,
-      about: `${popupInputJob.value}`
+      name: newName,
+      about: newJob
     })
   })
   .then(res => checkResponse(res))
 }
 
-//4. Добавление новой карточки
+// //4. Добавление новой карточки
 export function saveNewCardData(cardData) {
   return fetch(`${api.baseUrl}/cards`, {
     method: 'POST',
@@ -56,7 +56,7 @@ export function saveNewCardData(cardData) {
   .then(res => checkResponse(res))
 }
 
-//5. Постановка и снятие лайка
+// //5. Постановка и снятие лайка
 export function handleSetLike(cardId) {
   return fetch(`${api.baseUrl}/cards/likes/${cardId}`, {
     method: 'PUT',
@@ -73,7 +73,7 @@ export function handleRemoveLike(cardId) {
   .then(res => checkResponse(res))
 }
 
-//6. Удаление карточки
+// //6. Удаление карточки
 export function deleteCardData(cardId) {
   return fetch(`${api.baseUrl}/cards/${cardId}`, {
     method: 'DELETE',
@@ -82,7 +82,7 @@ export function deleteCardData(cardId) {
   .then(res => checkResponse(res))
 }
 
-//7. Обновление аватара пользователя
+// //7. Обновление аватара пользователя
 export function saveUserPicture(pictureData) {
   return fetch(`${api.baseUrl}/users/me/avatar`, {
     method: 'PATCH',
@@ -91,5 +91,3 @@ export function saveUserPicture(pictureData) {
   })
   .then(res => checkResponse(res))
 }
-
-//8. Улучшенный UX всех форм

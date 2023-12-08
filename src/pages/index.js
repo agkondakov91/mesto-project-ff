@@ -1,5 +1,4 @@
 import '../pages/index.css';
-// import { initialCards } from '../components/cards.js';
 import { createCard, changeLike, deleteCard } from '../components/card.js';
 import { openPopup, closePopup, closePopupClickOverlay } from '../components/modal.js';
 import { enableValidation, clearValidation } from '../components/validation.js';
@@ -102,6 +101,7 @@ function openImagePopup (cardData) {
 
 function handleFormSubmitUpdatePicture (evt) {
   evt.preventDefault();
+  popupFormUpdatePicture.querySelector('.popup__button').textContent = 'Сохранение...'
   const pictureData = {
     avatar: popupInputPictureUrl.value
   }
@@ -114,14 +114,20 @@ function handleFormSubmitUpdatePicture (evt) {
   })
   .catch((error) => {
     console.log(`Ошибка: ${error}`);
+  })
+  .finally(() => {
+    popupFormUpdatePicture.querySelector('.popup__button').textContent = 'Сохранить';
   });
 }
 
 function handleFormSubmitEdit (evt) {
   evt.preventDefault();
-  profileTitle.textContent = popupInputName.value;
-  profileDescription.textContent = popupInputJob.value;
-  saveUserData()
+  popupFormEdit.querySelector('.popup__button').textContent = 'Сохранение...';
+  const newName = popupInputName.value;
+  const newJob = popupInputJob.value;
+  profileTitle.textContent = newName;
+  profileDescription.textContent = newJob;
+  saveUserData(newName, newJob)
   .then(() => {
     closePopup(popupEdit);
     clearValidation(popupFormEdit, config);
@@ -129,10 +135,14 @@ function handleFormSubmitEdit (evt) {
   .catch((error) => {
     console.log(`Ошибка: ${error}`);
   })
+  .finally(() => {
+    popupFormEdit.querySelector('.popup__button').textContent = 'Сохранить';
+  });
 }
 
 function handleFormSubmitNewCard (evt) {
   evt.preventDefault();
+  popupFormNewCard.querySelector('.popup__button').textContent = 'Сохранение...'
   const cardDataNew = {
     name: popupInputCardName.value,
     link: popupInputCardUrl.value
@@ -147,6 +157,9 @@ function handleFormSubmitNewCard (evt) {
   .catch((error) => {
     console.log(`Ошибка: ${error}`);
   })
+  .finally(() => {
+    popupFormNewCard.querySelector('.popup__button').textContent = 'Сохранить';
+  });
 }
 
 popupCloseButtonsList.forEach(button => {
