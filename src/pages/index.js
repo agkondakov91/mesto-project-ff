@@ -1,5 +1,5 @@
 import '../pages/index.css';
-import { createCard, changeLike, deleteCard } from '../components/card.js';
+import { createCard, changeLike, handleDeleteCard } from '../components/card.js';
 import { openPopup, closePopup, closePopupClickOverlay } from '../components/modal.js';
 import { enableValidation, clearValidation } from '../components/validation.js';
 import { 
@@ -16,8 +16,6 @@ const config = {
   errorClass: 'popup__error_visible'
 }
 
-enableValidation(config);
-
 export const cardTemplate = document.querySelector('#card-template').content;
 const cardPlacesList = document.querySelector('.places__list');
 const profileImage = document.querySelector('.profile__image');
@@ -29,16 +27,19 @@ const popupCloseButtonsList = document.querySelectorAll('.popup__close');
 const popupUpdatePicture = document.querySelector('.popup_type_update-pic');
 const popupFormUpdatePicture = document.forms['update-pic'];
 const popupInputPictureUrl = popupFormUpdatePicture.querySelector('.popup__input_type_picture-url');
+const popupFormUpdatePictureButton = popupFormUpdatePicture.querySelector('.popup__button');
 
 const popupEdit = document.querySelector('.popup_type_edit');
 const popupFormEdit = document.forms['edit-profile'];
 const popupInputName = popupFormEdit.querySelector('.popup__input_type_name');
 const popupInputJob = popupFormEdit.querySelector('.popup__input_type_description');
+const popupFormEditButton = popupFormEdit.querySelector('.popup__button')
 
 const popupNewCard = document.querySelector('.popup_type_new-card');
 const popupFormNewCard = document.forms['new-place'];
 const popupInputCardName = popupFormNewCard.querySelector('.popup__input_type_card-name');
 const popupInputCardUrl = popupFormNewCard.querySelector('.popup__input_type_url');
+const popupFormNewCardButton = popupFormNewCard.querySelector('.popup__button')
 
 const popupImage = document.querySelector('.popup_type_image');
 const photoPopupImage = popupImage.querySelector('.popup__image');
@@ -52,12 +53,13 @@ function changeLikeHandler(cardId, cardLikeCountElement, cardLikeButton) {
   changeLike(cardId, cardLikeCountElement, cardLikeButton);
 }
 
-function addCard (arrElement) {
-  cardPlacesList.append(arrElement);
+function addCard(cardElement) {
+  cardPlacesList.append(cardElement);
 }
 
-function addNewCard (cardData, deleteHandler, likeHandler, imageHandler, userId) {
+function addNewCard(cardData, deleteHandler, likeHandler, imageHandler, userId) {
   const card = createCard(cardData, deleteHandler, likeHandler, imageHandler, userId);
+  card.dataset.cardId = cardData._id;
   cardPlacesList.prepend(card);
 }
 
@@ -69,39 +71,39 @@ function renderUserInfo(userData) {
 
 function renderCards(initialCardsData) {
   initialCardsData.forEach(cardData => {
-    const arrElement = createCard(cardData, deleteCard, changeLikeHandler, openImagePopup, userId);
-    arrElement.dataset.cardId = cardData._id;
-    addCard(arrElement);
+    const cardElement = createCard(cardData, handleDeleteCard, changeLikeHandler, openImagePopup, userId);
+    cardElement.dataset.cardId = cardData._id;
+    addCard(cardElement);
   });
 }
 
-function openUpdatePicturePopup () {
+function openUpdatePicturePopup() {
   clearValidation(popupFormUpdatePicture, config);
   openPopup(popupUpdatePicture);
 }
 
-function openEditPopup () {
+function openEditPopup() {
   clearValidation(popupFormEdit, config);
   popupInputName.value = profileTitle.textContent;
   popupInputJob.value = profileDescription.textContent;
   openPopup(popupEdit);
 }
 
-function openNewCardPopup () {
+function openNewCardPopup() {
   clearValidation(popupFormNewCard, config);
   openPopup(popupNewCard);
 }
 
-function openImagePopup (cardData) {
+function openImagePopup(cardData) {
   photoPopupImage.src = cardData.link;
   photoPopupImage.alt = cardData.name;
   captionPopupImage.textContent = cardData.name;
   openPopup(popupImage);
 }
 
-function handleFormSubmitUpdatePicture (evt) {
+function handleFormSubmitUpdatePicture(evt) {
   evt.preventDefault();
-  popupFormUpdatePicture.querySelector('.popup__button').textContent = 'Сохранение...'
+  popupFormUpdatePictureButton.textContent = 'Сохранение...'
   const pictureData = {
     avatar: popupInputPictureUrl.value
   }
@@ -116,19 +118,19 @@ function handleFormSubmitUpdatePicture (evt) {
     console.log(`Ошибка: ${error}`);
   })
   .finally(() => {
-    popupFormUpdatePicture.querySelector('.popup__button').textContent = 'Сохранить';
+    popupFormUpdatePictureButton.textContent = 'Сохранить';
   });
 }
 
-function handleFormSubmitEdit (evt) {
+function handleFormSubmitEdit(evt) {
   evt.preventDefault();
-  popupFormEdit.querySelector('.popup__button').textContent = 'Сохранение...';
+  popupFormEditButton.textContent = 'Сохранение...';
   const newName = popupInputName.value;
   const newJob = popupInputJob.value;
-  profileTitle.textContent = newName;
-  profileDescription.textContent = newJob;
   saveUserData(newName, newJob)
   .then(() => {
+    profileTitle.textContent = newName;
+    profileDescription.textContent = newJob;
     closePopup(popupEdit);
     clearValidation(popupFormEdit, config);
   })
@@ -136,20 +138,20 @@ function handleFormSubmitEdit (evt) {
     console.log(`Ошибка: ${error}`);
   })
   .finally(() => {
-    popupFormEdit.querySelector('.popup__button').textContent = 'Сохранить';
+    popupFormEditButton.textContent = 'Сохранить';
   });
 }
 
-function handleFormSubmitNewCard (evt) {
+function handleFormSubmitNewCard(evt) {
   evt.preventDefault();
-  popupFormNewCard.querySelector('.popup__button').textContent = 'Сохранение...'
+  popupFormNewCardButton.textContent = 'Сохранение...'
   const cardDataNew = {
     name: popupInputCardName.value,
     link: popupInputCardUrl.value
   }
   saveNewCardData(cardDataNew)
   .then((newCardData) => {
-    addNewCard(newCardData, deleteCard, changeLike, openImagePopup, userId);
+    addNewCard(newCardData, handleDeleteCard, changeLike, openImagePopup, userId);
     closePopup(popupNewCard);
     popupFormNewCard.reset();
     clearValidation(popupFormNewCard, config);
@@ -158,7 +160,7 @@ function handleFormSubmitNewCard (evt) {
     console.log(`Ошибка: ${error}`);
   })
   .finally(() => {
-    popupFormNewCard.querySelector('.popup__button').textContent = 'Сохранить';
+    popupFormNewCardButton.textContent = 'Сохранить';
   });
 }
 
@@ -184,3 +186,5 @@ Promise.all([getInitialCards(), getUserInfo()])
 .catch((error) => {
   console.log(`Ошибка: ${error}`);
 })
+
+enableValidation(config);
