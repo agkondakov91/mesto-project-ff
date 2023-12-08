@@ -107,9 +107,9 @@ function handleFormSubmitUpdatePicture(evt) {
   const pictureData = {
     avatar: popupInputPictureUrl.value
   }
-  profileImage.style.backgroundImage = `url(${popupInputPictureUrl.value})`;
   saveUserPicture(pictureData)
   .then(() => {
+    profileImage.style.backgroundImage = `url(${popupInputPictureUrl.value})`;
     closePopup(popupUpdatePicture);
     popupFormUpdatePicture.reset();
     clearValidation(popupFormUpdatePicture, config);
