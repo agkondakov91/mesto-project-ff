@@ -1,5 +1,6 @@
-import { cardTemplate } from '../pages/index.js';
 import { deleteCardData, handleRemoveLike, handleSetLike } from '../components/api.js'
+
+const cardTemplate = document.querySelector('#card-template').content;
 
 // Функция клонирования темплейта
 function cloneCardTemplate () {
@@ -21,10 +22,8 @@ export function createCard (cardData, deleteHandler, likeHandler, imageHandler, 
   cardImage.alt = cardData.name;
 
   if (deleteHandler) {
-    cardDeletButton.addEventListener('click', function(evt) {
-      const cardElement = evt.target.closest('.card');
-      const cardId = cardElement.dataset.cardId;
-      deleteHandler(cardId, cardElement);
+    cardDeletButton.addEventListener('click', () => {
+      deleteHandler(cardData._id, cardElement);
     });
   }
 

@@ -16,7 +16,6 @@ const config = {
   errorClass: 'popup__error_visible'
 }
 
-export const cardTemplate = document.querySelector('#card-template').content;
 const cardPlacesList = document.querySelector('.places__list');
 const profileImage = document.querySelector('.profile__image');
 const profileEditAvatarButton = document.querySelector('.profile__edit-avatar');
@@ -59,7 +58,6 @@ function addCard(cardElement) {
 
 function addNewCard(cardData, deleteHandler, likeHandler, imageHandler, userId) {
   const card = createCard(cardData, deleteHandler, likeHandler, imageHandler, userId);
-  card.dataset.cardId = cardData._id;
   cardPlacesList.prepend(card);
 }
 
@@ -72,7 +70,6 @@ function renderUserInfo(userData) {
 function renderCards(initialCardsData) {
   initialCardsData.forEach(cardData => {
     const cardElement = createCard(cardData, handleDeleteCard, changeLikeHandler, openImagePopup, userId);
-    cardElement.dataset.cardId = cardData._id;
     addCard(cardElement);
   });
 }
