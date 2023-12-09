@@ -1,5 +1,7 @@
 # Проектная работа Mesto
 
+![mesto_prew](https://github.com/agkondakov91/mesto-project-ff/assets/134331485/6afff868-5716-452d-9cc6-9cfa64bfb3d8)
+
 Учебный проект по верстке интерактивной страницы с использованием разметки HTML,
 стилей CSS и программирования на языке JavaScript.
 
